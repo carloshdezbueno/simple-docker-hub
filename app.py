@@ -8,9 +8,17 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.utils import secure_filename
 from PIL import Image
 import io
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'super_secret_key_change_this_in_production'
+app.secret_key = os.getenv('SECRET_KEY')
+
+if not app.secret_key:
+    raise ValueError("No SECRET_KEY set for Flask application. Did you forget to create a .env file?")
+
 DB_NAME = os.getenv('DB_PATH', 'links.db')
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'ico', 'svg'}

@@ -26,8 +26,10 @@ wheels/
 venv/
 ENV/
 
-# Database
-links.db
+# Database and Data Folder
+data/*
+!data/.gitkeep
+*.db
 *.db-shm
 *.db-wal
 
@@ -51,3 +53,4 @@ Thumbs.db
 
 # Docker (optional, usually kept if part of the repo)
 #.dockerconfig
+.env

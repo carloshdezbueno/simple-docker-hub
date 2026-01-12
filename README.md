@@ -95,10 +95,30 @@ If you prefer running without Docker (e.g., in a Python venv):
 
 ## ⚙️ Configuration
 
+### Environment Variables (.env)
+
+This application uses a `.env` file to manage sensitive configuration like the Flask Secret Key. This file is not committed to version control.
+
+1.  **Create a `.env` file** in the project root:
+    ```bash
+    cp .env.example .env  # If you have an example file, otherwise create one
+    ```
+
+2.  **Add your configuration:**
+    ```env
+    SECRET_KEY=your_generated_secret_key_here
+    DB_PATH=links.db
+    ```
+
+    You can generate a strong secret key using:
+    ```bash
+    openssl rand -hex 32
+    ```
+
 | Environment Variable | Default | Description |
 | -------------------- | ------- | ----------- |
 | `DB_PATH` | `links.db` (local) | Path to the SQLite database file. |
-| `SECRET_KEY` | `super_secret...` | Flask secret key. Change this for production! |
+| `SECRET_KEY` | **REQUIRED** | Flask secret key. Must be set in `.env` or environment. |
 | `PORT` | `5000` | Port to run the application on. |
 
 ---
