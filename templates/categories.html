@@ -3,9 +3,9 @@
 {% block content %}
 <div class="max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-text">Gestionar Categorías</h1>
+        <h1 class="text-3xl font-bold text-text">{{ t('manage_categories') }}</h1>
         <a href="{{ url_for('add_category') }}" class="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded shadow transition duration-300">
-            + Nueva Categoría
+            + {{ t('new_category') }}
         </a>
     </div>
 
@@ -14,10 +14,10 @@
             <thead>
                 <tr>
                     <th class="px-5 py-3 border-b-2 border-border bg-background text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                        Nombre
+                        {{ t('cat_name_label') }}
                     </th>
                     <th class="px-5 py-3 border-b-2 border-border bg-background text-left text-xs font-semibold text-text-muted uppercase tracking-wider">
-                        Acciones
+                        {{ t('actions') }}
                     </th>
                 </tr>
             </thead>
@@ -30,11 +30,11 @@
                     <td class="px-5 py-5 border-b border-border text-sm">
                         <div class="flex items-center space-x-3">
                             <a href="{{ url_for('edit_category', id=category['id']) }}" class="text-blue-500 hover:text-blue-700">
-                                Editar
+                                {{ t('edit') }}
                             </a>
                             <form action="{{ url_for('delete_category', id=category['id']) }}" method="POST" class="inline">
-                                <button type="submit" onclick="return confirm('¿Borrar esta categoría? Los links asociados se moverán a otra categoría.')" class="text-red-500 hover:text-red-700">
-                                    Borrar
+                                <button type="submit" onclick="return confirm('{{ t('delete_cat_confirm') }}')" class="text-red-500 hover:text-red-700">
+                                    {{ t('delete') }}
                                 </button>
                             </form>
                         </div>

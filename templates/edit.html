@@ -2,12 +2,12 @@
 
 {% block content %}
 <div class="max-w-lg mx-auto bg-surface p-8 rounded-xl shadow-md border border-border animate-fade-in-down">
-    <h2 class="text-2xl font-bold text-text mb-6 border-b border-border pb-2">Editar Link</h2>
+    <h2 class="text-2xl font-bold text-text mb-6 border-b border-border pb-2">{{ t('edit_link') }}</h2>
     
     <form method="post" enctype="multipart/form-data">
         <!-- Category Selection -->
         <div class="mb-4">
-            <label for="category_id" class="block text-text text-sm font-bold mb-2">Categoría</label>
+            <label for="category_id" class="block text-text text-sm font-bold mb-2">{{ t('category_label') }}</label>
             <div class="relative">
                 <select name="category_id" id="category_id" 
                         class="shadow appearance-none border border-border rounded w-full py-2 px-3 text-text bg-background leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent pr-8">
@@ -22,24 +22,24 @@
         </div>
 
         <div class="mb-4">
-            <label for="title" class="block text-text text-sm font-bold mb-2">Título de la Aplicación</label>
+            <label for="title" class="block text-text text-sm font-bold mb-2">{{ t('title_label') }}</label>
             <input type="text" name="title" id="title" placeholder="Ej: Portainer" required value="{{ link['title'] }}"
                    class="shadow appearance-none border border-border rounded w-full py-2 px-3 text-text bg-background leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
         
         <div class="mb-4">
-            <label for="url" class="block text-text text-sm font-bold mb-2">URL Completa</label>
+            <label for="url" class="block text-text text-sm font-bold mb-2">{{ t('url_label') }}</label>
             <input type="url" name="url" id="url" placeholder="http://192.168.1.100:9000" required value="{{ link['url'] }}"
                    class="shadow appearance-none border border-border rounded w-full py-2 px-3 text-text bg-background leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
         </div>
 
         <!-- Icon Selection -->
         <div class="mb-6">
-            <label class="block text-text text-sm font-bold mb-2">Icono</label>
+            <label class="block text-text text-sm font-bold mb-2">{{ t('icon_label') }}</label>
             
             <!-- Preview Current Icon -->
             <div class="mb-4 p-2 bg-background rounded text-center border border-border">
-                <p class="text-xs text-text-muted mb-1">Icono Actual:</p>
+                <p class="text-xs text-text-muted mb-1">{{ t('current_icon') }}</p>
                 {% if link['icon_type'] == 'image' %}
                     <img src="{{ url_for('static', filename='uploads/' + link['icon_value']) }}" class="h-12 w-12 object-contain mx-auto">
                 {% else %}
@@ -51,16 +51,16 @@
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="radio" class="form-radio text-primary" name="icon_type" value="emoji" 
                            {% if link['icon_type'] != 'image' %}checked{% endif %} onclick="toggleIconInput('emoji')">
-                    <span class="ml-2">😊 Usar Emoji</span>
+                    <span class="ml-2">😊 {{ t('use_emoji') }}</span>
                 </label>
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="radio" class="form-radio text-primary" name="icon_type" value="image" 
                            {% if link['icon_type'] == 'image' %}checked{% endif %} onclick="toggleIconInput('image')">
-                    <span class="ml-2">📁 Subir Imagen</span>
+                    <span class="ml-2">📁 {{ t('upload_image') }}</span>
                 </label>
                 <label class="inline-flex items-center cursor-pointer">
                     <input type="radio" class="form-radio text-primary" name="icon_type" value="fetch" onclick="toggleIconInput('fetch')">
-                    <span class="ml-2">🌐 Buscar en URL (Sobrescribir actual)</span>
+                    <span class="ml-2">🌐 {{ t('fetch_url_overwrite') }}</span>
                 </label>
             </div>
 
@@ -80,13 +80,13 @@
                               file:text-sm file:font-semibold
                               file:bg-background file:text-primary
                               hover:file:bg-border">
-                <p class="text-xs text-text-muted mt-1">Soporta PNG, JPG, WEBP.</p>
+                <p class="text-xs text-text-muted mt-1">{{ t('support_png') }}</p>
             </div>
 
             <!-- Fetch Info -->
             <div id="fetch-input" class="hidden pl-6">
                 <p class="text-sm text-text-muted italic">
-                    Se descargará el favicon de la URL y reemplazará al icono actual.
+                    {{ t('fetch_info_edit') }}
                 </p>
             </div>
         </div>
@@ -94,10 +94,10 @@
         <div class="flex items-center justify-between">
             <button type="submit" 
                     class="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 w-full sm:w-auto">
-                Guardar Cambios
+                {{ t('save_changes') }}
             </button>
             <a href="{{ url_for('index') }}" class="inline-block align-baseline font-bold text-sm text-text-muted hover:text-text ml-4">
-                Cancelar
+                {{ t('cancel') }}
             </a>
         </div>
     </form>

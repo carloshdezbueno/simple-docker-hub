@@ -165,16 +165,16 @@
                     <div>
                         <a href="{{ url_for('index') }}" class="flex items-center py-4 px-2">
                             <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="h-10 w-10 mr-2 object-contain">
-                            <span class="font-semibold text-white text-lg">RPi Hub</span>
+                            <span class="font-semibold text-white text-lg">{{ t('title') }}</span>
                         </a>
                     </div>
                 </div>
                 
                 <div class="flex items-center space-x-4">
                     <div class="hidden md:flex items-center space-x-1">
-                        <a href="{{ url_for('index') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'index' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">Mis Links</a>
-                        <a href="{{ url_for('add') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'add' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">Añadir Nuevo</a>
-                        <a href="{{ url_for('manage_categories') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'manage_categories' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">Gestionar Categorías</a>
+                        <a href="{{ url_for('index') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'index' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">{{ t('my_links') }}</a>
+                        <a href="{{ url_for('add') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'add' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">{{ t('add_new') }}</a>
+                        <a href="{{ url_for('manage_categories') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'manage_categories' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">{{ t('manage_categories') }}</a>
                     </div>
 
                     <!-- Theme Dropdown (Right) -->
@@ -183,26 +183,44 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                             </svg>
-                            <span class="ml-1 text-sm font-medium hidden sm:inline">Tema</span>
+                            <span class="ml-1 text-sm font-medium hidden sm:inline">{{ t('theme') }}</span>
                         </button>
                         <!-- Dropdown Menu -->
                         <div class="absolute right-0 mt-0 w-48 bg-white rounded-md shadow-xl py-2 hidden group-hover:block z-50 text-gray-800 animate-fade-in-down">
-                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">Clásicos</div>
-                            <a href="#" onclick="setTheme('light')" class="block px-4 py-2 hover:bg-indigo-100 flex items-center"><span class="w-4 h-4 rounded-full bg-gray-100 border mr-2"></span> Light</a>
-                            <a href="#" onclick="setTheme('dark')" class="block px-4 py-2 hover:bg-gray-200 flex items-center"><span class="w-4 h-4 rounded-full bg-gray-900 border mr-2"></span> Dark</a>
+                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">{{ t('classic_themes') }}</div>
+                            <a href="#" onclick="setTheme('light')" class="block px-4 py-2 hover:bg-indigo-100 flex items-center"><span class="w-4 h-4 rounded-full bg-gray-100 border mr-2"></span> {{ t('light') }}</a>
+                            <a href="#" onclick="setTheme('dark')" class="block px-4 py-2 hover:bg-gray-200 flex items-center"><span class="w-4 h-4 rounded-full bg-gray-900 border mr-2"></span> {{ t('dark') }}</a>
                             
                             <div class="border-t my-1"></div>
-                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">Minimalistas</div>
-                            <a href="#" onclick="setTheme('nord')" class="block px-4 py-2 hover:bg-blue-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#5E81AC] border mr-2"></span> Nord</a>
-                            <a href="#" onclick="setTheme('coffee')" class="block px-4 py-2 hover:bg-orange-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#A0522D] border mr-2"></span> Coffee</a>
-                            <a href="#" onclick="setTheme('lavender')" class="block px-4 py-2 hover:bg-purple-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#8B5CF6] border mr-2"></span> Lavender</a>
+                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">{{ t('minimalist_themes') }}</div>
+                            <a href="#" onclick="setTheme('nord')" class="block px-4 py-2 hover:bg-blue-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#5E81AC] border mr-2"></span> {{ t('nord') }}</a>
+                            <a href="#" onclick="setTheme('coffee')" class="block px-4 py-2 hover:bg-orange-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#A0522D] border mr-2"></span> {{ t('coffee') }}</a>
+                            <a href="#" onclick="setTheme('lavender')" class="block px-4 py-2 hover:bg-purple-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#8B5CF6] border mr-2"></span> {{ t('lavender') }}</a>
                             
                             <div class="border-t my-1"></div>
-                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">Vibrantes</div>
-                            <a href="#" onclick="setTheme('dracula')" class="block px-4 py-2 hover:bg-pink-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#BD93F9] border mr-2"></span> Dracula</a>
-                            <a href="#" onclick="setTheme('cyberpunk')" class="block px-4 py-2 hover:bg-fuchsia-100 flex items-center"><span class="w-4 h-4 rounded-full bg-slate-900 border mr-2"></span> Cyberpunk</a>
-                            <a href="#" onclick="setTheme('forest')" class="block px-4 py-2 hover:bg-green-100 flex items-center"><span class="w-4 h-4 rounded-full bg-green-700 border mr-2"></span> Forest</a>
-                            <a href="#" onclick="setTheme('ocean')" class="block px-4 py-2 hover:bg-sky-100 flex items-center"><span class="w-4 h-4 rounded-full bg-sky-900 border mr-2"></span> Ocean</a>
+                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">{{ t('vibrant_themes') }}</div>
+                            <a href="#" onclick="setTheme('dracula')" class="block px-4 py-2 hover:bg-pink-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#BD93F9] border mr-2"></span> {{ t('dracula') }}</a>
+                            <a href="#" onclick="setTheme('cyberpunk')" class="block px-4 py-2 hover:bg-fuchsia-100 flex items-center"><span class="w-4 h-4 rounded-full bg-slate-900 border mr-2"></span> {{ t('cyberpunk') }}</a>
+                            <a href="#" onclick="setTheme('forest')" class="block px-4 py-2 hover:bg-green-100 flex items-center"><span class="w-4 h-4 rounded-full bg-green-700 border mr-2"></span> {{ t('forest') }}</a>
+                            <a href="#" onclick="setTheme('ocean')" class="block px-4 py-2 hover:bg-sky-100 flex items-center"><span class="w-4 h-4 rounded-full bg-sky-900 border mr-2"></span> {{ t('ocean') }}</a>
+                        </div>
+                    </div>
+
+                    <!-- Language Dropdown -->
+                    <div class="relative group py-4">
+                        <button class="flex items-center text-white opacity-90 hover:opacity-100 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                            </svg>
+                            <span class="ml-1 text-sm font-medium hidden sm:inline">{{ t('language') }}</span>
+                        </button>
+                         <div class="absolute right-0 mt-0 w-32 bg-white rounded-md shadow-xl py-2 hidden group-hover:block z-50 text-gray-800 animate-fade-in-down">
+                            <a href="{{ url_for('set_language', lang='es') }}" class="block px-4 py-2 hover:bg-gray-100 flex items-center {% if current_language == 'es' %}font-bold text-primary{% endif %}">
+                                🇪🇸 Español
+                            </a>
+                            <a href="{{ url_for('set_language', lang='en') }}" class="block px-4 py-2 hover:bg-gray-100 flex items-center {% if current_language == 'en' %}font-bold text-primary{% endif %}">
+                                🇺🇸 English
+                            </a>
                         </div>
                     </div>
                 </div>

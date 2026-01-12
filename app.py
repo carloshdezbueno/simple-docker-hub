@@ -4,7 +4,7 @@ import uuid
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
 from PIL import Image
 import io
@@ -18,6 +18,145 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp', 'ico', 'svg'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# --- Internationalization ---
+TRANSLATIONS = {
+    'es': {
+        'title': 'Hub de Aplicaciones',
+        'my_apps': 'Mis Aplicaciones',
+        'my_links': 'Mis Links',
+        'add_link': 'Añadir Link',
+        'add_new': 'Añadir Nuevo',
+        'manage_categories': 'Gestionar Categorías',
+        'theme': 'Tema',
+        'add_new_link': 'Añadir Nuevo Link',
+        'edit_link': 'Editar Link',
+        'title_label': 'Título de la Aplicación',
+        'url_label': 'URL Completa',
+        'category_label': 'Categoría',
+        'icon_label': 'Icono',
+        'use_emoji': 'Usar Emoji',
+        'upload_image': 'Subir Imagen',
+        'fetch_url': 'Usar Icono de la URL (Automático)',
+        'fetch_url_overwrite': 'Buscar en URL (Sobrescribir actual)',
+        'save_link': 'Guardar Link',
+        'save_changes': 'Guardar Cambios',
+        'cancel': 'Cancelar',
+        'delete_confirm': '¿Estás seguro de querer borrar este link?',
+        'no_links': 'No hay links configurados aún.',
+        'start_adding': '¡Empieza añadiendo uno!',
+        'new_category': 'Nueva Categoría',
+        'edit_category': 'Editar Categoría',
+        'cat_name_label': 'Nombre de la Categoría',
+        'actions': 'Acciones',
+        'delete': 'Borrar',
+        'edit': 'Editar',
+        'delete_cat_confirm': '¿Borrar esta categoría? Los links asociados se moverán a otra categoría.',
+        'flash_cat_added': 'Categoría añadida.',
+        'flash_cat_updated': 'Categoría actualizada.',
+        'flash_cat_deleted': 'Categoría eliminada.',
+        'flash_cat_only_one': 'No puedes borrar la única categoría.',
+        'flash_link_deleted': 'Link eliminado correctamente!',
+        'flash_error_image': 'Error guardando la imagen.',
+        'flash_error_fetch': 'No se pudo guardar el favicon descargado.',
+        'flash_error_fetch_not_found': 'No se pudo encontrar el favicon en la URL.',
+        'flash_title_url_required': '¡Título y URL son obligatorios!',
+        'flash_link_not_found': '¡Link no encontrado!',
+        'support_png': 'Soporta PNG, JPG, WEBP.',
+        'fetch_info_add': 'Al guardar, intentaremos descargar el favicon de la URL proporcionada y usarlo como icono.',
+        'fetch_info_edit': 'Se descargará el favicon de la URL y reemplazará al icono actual.',
+        'current_icon': 'Icono Actual:',
+        'classic_themes': 'Clásicos',
+        'minimalist_themes': 'Minimalistas',
+        'vibrant_themes': 'Vibrantes',
+        'language': 'Idioma',
+        'light': 'Claro',
+        'dark': 'Oscuro',
+        'forest': 'Bosque',
+        'ocean': 'Océano',
+        'nord': 'Nord',
+        'dracula': 'Dracula',
+        'coffee': 'Café',
+        'lavender': 'Lavanda',
+        'cyberpunk': 'Cyberpunk'
+    },
+    'en': {
+        'title': 'App Hub',
+        'my_apps': 'My Apps',
+        'my_links': 'My Links',
+        'add_link': 'Add Link',
+        'add_new': 'Add New',
+        'manage_categories': 'Manage Categories',
+        'theme': 'Theme',
+        'add_new_link': 'Add New Link',
+        'edit_link': 'Edit Link',
+        'title_label': 'Application Title',
+        'url_label': 'Full URL',
+        'category_label': 'Category',
+        'icon_label': 'Icon',
+        'use_emoji': 'Use Emoji',
+        'upload_image': 'Upload Image',
+        'fetch_url': 'Use URL Icon (Auto)',
+        'fetch_url_overwrite': 'Fetch from URL (Overwrite)',
+        'save_link': 'Save Link',
+        'save_changes': 'Save Changes',
+        'cancel': 'Cancel',
+        'delete_confirm': 'Are you sure you want to delete this link?',
+        'no_links': 'No links configured yet.',
+        'start_adding': 'Start by adding one!',
+        'new_category': 'New Category',
+        'edit_category': 'Edit Category',
+        'cat_name_label': 'Category Name',
+        'actions': 'Actions',
+        'delete': 'Delete',
+        'edit': 'Edit',
+        'delete_cat_confirm': 'Delete this category? Associated links will be moved to another category.',
+        'flash_cat_added': 'Category added.',
+        'flash_cat_updated': 'Category updated.',
+        'flash_cat_deleted': 'Category deleted.',
+        'flash_cat_only_one': 'Cannot delete the only category.',
+        'flash_link_deleted': 'Link deleted successfully!',
+        'flash_error_image': 'Error saving image.',
+        'flash_error_fetch': 'Could not save fetched favicon.',
+        'flash_error_fetch_not_found': 'Could not find favicon at URL.',
+        'flash_title_url_required': 'Title and URL are required!',
+        'flash_link_not_found': 'Link not found!',
+        'support_png': 'Supports PNG, JPG, WEBP.',
+        'fetch_info_add': 'On save, we will attempt to download the favicon from the provided URL.',
+        'fetch_info_edit': 'The favicon will be downloaded from the URL and replace the current icon.',
+        'current_icon': 'Current Icon:',
+        'classic_themes': 'Classics',
+        'minimalist_themes': 'Minimalists',
+        'vibrant_themes': 'Vibrants',
+        'language': 'Language',
+        'light': 'Light',
+        'dark': 'Dark',
+        'forest': 'Forest',
+        'ocean': 'Ocean',
+        'nord': 'Nord',
+        'dracula': 'Dracula',
+        'coffee': 'Coffee',
+        'lavender': 'Lavender',
+        'cyberpunk': 'Cyberpunk'
+    }
+}
+
+def get_locale():
+    return session.get('lang', 'es')
+
+def t(key):
+    lang = get_locale()
+    return TRANSLATIONS.get(lang, TRANSLATIONS['es']).get(key, key)
+
+@app.context_processor
+def inject_i18n():
+    return dict(t=t, current_language=get_locale())
+
+@app.route('/set_language/<lang>')
+def set_language(lang):
+    if lang in TRANSLATIONS:
+        session['lang'] = lang
+    return redirect(request.referrer or url_for('index'))
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -179,7 +318,7 @@ def add_category():
             conn.execute('INSERT INTO categories (name) VALUES (?)', (name,))
             conn.commit()
             conn.close()
-            flash('Categoría añadida.')
+            flash(t('flash_cat_added'))
             return redirect(url_for('manage_categories'))
     return render_template('category_form.html')
 
@@ -192,7 +331,7 @@ def edit_category(id):
             conn.execute('UPDATE categories SET name = ? WHERE id = ?', (name, id))
             conn.commit()
             conn.close()
-            flash('Categoría actualizada.')
+            flash(t('flash_cat_updated'))
             return redirect(url_for('manage_categories'))
     
     category = conn.execute('SELECT * FROM categories WHERE id = ?', (id,)).fetchone()
@@ -205,7 +344,7 @@ def delete_category(id):
     # Check if it's the only category or default
     count = conn.execute('SELECT count(*) FROM categories').fetchone()[0]
     if count <= 1:
-        flash('No puedes borrar la única categoría.')
+        flash(t('flash_cat_only_one'))
         conn.close()
         return redirect(url_for('manage_categories'))
 
@@ -218,7 +357,7 @@ def delete_category(id):
     conn.execute('DELETE FROM categories WHERE id = ?', (id,))
     conn.commit()
     conn.close()
-    flash('Categoría eliminada.')
+    flash(t('flash_cat_deleted'))
     return redirect(url_for('manage_categories'))
 
 @app.route('/add', methods=('GET', 'POST'))
@@ -243,7 +382,7 @@ def add():
                     if processed_filename:
                         icon_value = processed_filename
                     else:
-                        flash('Error guardando la imagen.')
+                        flash(t('flash_error_image'))
                         icon_type = 'emoji'
                 else:
                     icon_type = 'emoji'
@@ -256,14 +395,14 @@ def add():
                     icon_type = 'image'
                     icon_value = processed_filename
                 else:
-                     flash('No se pudo guardar el favicon descargado.')
+                     flash(t('flash_error_fetch'))
                      icon_type = 'emoji'
             else:
-                flash('No se pudo encontrar el favicon en la URL.')
+                flash(t('flash_error_fetch_not_found'))
                 icon_type = 'emoji'
 
         if not title or not url:
-            flash('Title and URL are required!')
+            flash(t('flash_title_url_required'))
         else:
             conn.execute('INSERT INTO links (title, url, icon_type, icon_value, category_id) VALUES (?, ?, ?, ?, ?)', 
                       (title, url, icon_type, icon_value, category_id))
@@ -312,16 +451,16 @@ def edit(id):
                     icon_type = 'image'
                     icon_value = processed_filename
                 else:
-                    flash('Error guardando favicon.')
+                    flash(t('flash_error_fetch'))
                     icon_type = current_link['icon_type']
                     icon_value = current_link['icon_value']
              else:
-                flash('No se encontró favicon.')
+                flash(t('flash_error_fetch_not_found'))
                 icon_type = current_link['icon_type']
                 icon_value = current_link['icon_value']
 
         if not title or not url:
-            flash('Title and URL are required!')
+            flash(t('flash_title_url_required'))
         else:
             conn.execute('UPDATE links SET title = ?, url = ?, icon_type = ?, icon_value = ?, category_id = ? WHERE id = ?', 
                       (title, url, icon_type, icon_value, category_id, id))
@@ -334,7 +473,7 @@ def edit(id):
     conn.close()
 
     if link is None:
-        flash('Link not found!')
+        flash(t('flash_link_not_found'))
         return redirect(url_for('index'))
 
     return render_template('edit.html', link=link, categories=categories)
@@ -346,7 +485,7 @@ def delete(id):
     c.execute('DELETE FROM links WHERE id = ?', (id,))
     conn.commit()
     conn.close()
-    flash('Link deleted successfully!')
+    flash(t('flash_link_deleted'))
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
