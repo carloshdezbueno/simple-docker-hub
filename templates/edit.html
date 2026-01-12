@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-surface p-8 rounded-xl shadow-md border border-border animate-fade-in-down">
+    <h2 class="text-2xl font-bold text-text mb-6 border-b border-border pb-2">Editar Link</h2>
+    
+    <form method="post" enctype="multipart/form-data">
+        <!-- Category Selection -->
+        <div class="mb-4">
+            <label for="category_id" class="block text-text text-sm font-bold mb-2">Categoría</label>
+            <div class="relative">
+                <select name="category_id" id="category_id" 
+                        class="shadow appearance-none border border-border rounded w-full py-2 px-3 text-text bg-background leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent pr-8">
+                    {% for category in categories %}
+                        <option value="{{ category['id'] }}" {% if category['id'] == link['category_id'] %}selected{% endif %}>{{ category['name'] }}</option>
+                    {% endfor %}
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="title" class="block text-text text-sm font-bold mb-2">Título de la Aplicación</label>
+            <input type="text" name="title" id="title" placeholder="Ej: Portainer" required value="{{ link['title'] }}"
+                   class="shadow appearance-none border border-border rounded w-full py-2 px-3 text-text bg-background leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        
+        <div class="mb-4">
+            <label for="url" class="block text-text text-sm font-bold mb-2">URL Completa</label>
+            <input type="url" name="url" id="url" placeholder="http://192.168.1.100:9000" required value="{{ link['url'] }}"
+                   class="shadow appearance-none border border-border rounded w-full py-2 px-3 text-text bg-background leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+
+        <!-- Icon Selection -->
+        <div class="mb-6">
+            <label class="block text-text text-sm font-bold mb-2">Icono</label>
+            
+            <!-- Preview Current Icon -->
+            <div class="mb-4 p-2 bg-background rounded text-center border border-border">
+                <p class="text-xs text-text-muted mb-1">Icono Actual:</p>
+                {% if link['icon_type'] == 'image' %}
+                    <img src="{{ url_for('static', filename='uploads/' + link['icon_value']) }}" class="h-12 w-12 object-contain mx-auto">
+                {% else %}
+                    <span class="text-4xl">{{ link['icon_value'] }}</span>
+                {% endif %}
+            </div>
+
+            <div class="flex flex-col space-y-2 mb-3 text-text">
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="radio" class="form-radio text-primary" name="icon_type" value="emoji" 
+                           {% if link['icon_type'] != 'image' %}checked{% endif %} onclick="toggleIconInput('emoji')">
+                    <span class="ml-2">😊 Usar Emoji</span>
+                </label>
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="radio" class="form-radio text-primary" name="icon_type" value="image" 
+                           {% if link['icon_type'] == 'image' %}checked{% endif %} onclick="toggleIconInput('image')">
+                    <span class="ml-2">📁 Subir Imagen</span>
+                </label>
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="radio" class="form-radio text-primary" name="icon_type" value="fetch" onclick="toggleIconInput('fetch')">
+                    <span class="ml-2">🌐 Buscar en URL (Sobrescribir actual)</span>
+                </label>
+            </div>
+
+            <!-- Emoji Input -->
+            <div id="emoji-input" class="pl-6 {% if link['icon_type'] == 'image' %}hidden{% endif %}">
+                <input type="text" name="icon_emoji" placeholder="Ej: 🐋" 
+                       value="{% if link['icon_type'] != 'image' %}{{ link['icon_value'] }}{% else %}🔗{% endif %}"
+                       class="shadow appearance-none border border-border rounded w-24 py-2 px-3 text-text bg-background text-center text-xl leading-tight focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+
+            <!-- Image Input -->
+            <div id="image-input" class="pl-6 {% if link['icon_type'] != 'image' %}hidden{% endif %}">
+                <input type="file" name="icon_image" accept="image/*"
+                       class="block w-full text-sm text-text-muted
+                              file:mr-4 file:py-2 file:px-4
+                              file:rounded-full file:border-0
+                              file:text-sm file:font-semibold
+                              file:bg-background file:text-primary
+                              hover:file:bg-border">
+                <p class="text-xs text-text-muted mt-1">Soporta PNG, JPG, WEBP.</p>
+            </div>
+
+            <!-- Fetch Info -->
+            <div id="fetch-input" class="hidden pl-6">
+                <p class="text-sm text-text-muted italic">
+                    Se descargará el favicon de la URL y reemplazará al icono actual.
+                </p>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <button type="submit" 
+                    class="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 w-full sm:w-auto">
+                Guardar Cambios
+            </button>
+            <a href="{{ url_for('index') }}" class="inline-block align-baseline font-bold text-sm text-text-muted hover:text-text ml-4">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function toggleIconInput(type) {
+        document.getElementById('emoji-input').classList.add('hidden');
+        document.getElementById('image-input').classList.add('hidden');
+        document.getElementById('fetch-input').classList.add('hidden');
+
+        if (type === 'emoji') {
+            document.getElementById('emoji-input').classList.remove('hidden');
+        } else if (type === 'image') {
+            document.getElementById('image-input').classList.remove('hidden');
+        } else if (type === 'fetch') {
+            document.getElementById('fetch-input').classList.remove('hidden');
+        }
+    }
+</script>
+{% endblock %}

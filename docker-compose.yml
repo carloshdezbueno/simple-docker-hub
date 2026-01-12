@@ -1,0 +1,16 @@
+services:
+  hub:
+    build: .
+    container_name: rpi-hub
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_PATH=/data/links.db
+    volumes:
+      - hub_data:/data
+      - hub_uploads:/app/static/uploads
+    restart: unless-stopped
+
+volumes:
+  hub_data:
+  hub_uploads:

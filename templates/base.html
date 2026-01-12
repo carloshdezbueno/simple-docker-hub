@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPi Hub</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
+    
+    <!-- Tailwind CSS con Configuración Extendida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--primary)',
+                        'primary-hover': 'var(--primary-hover)',
+                        background: 'var(--background)',
+                        surface: 'var(--surface)',
+                        text: 'var(--text)',
+                        'text-muted': 'var(--text-muted)',
+                        border: 'var(--border)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Definición de Temas con Variables CSS */
+        :root {
+            /* Default (Light) */
+            --primary: #4f46e5;       /* indigo-600 */
+            --primary-hover: #4338ca; /* indigo-700 */
+            --background: #f3f4f6;    /* gray-100 */
+            --surface: #ffffff;       /* white */
+            --text: #1f2937;          /* gray-800 */
+            --text-muted: #6b7280;    /* gray-500 */
+            --border: #e5e7eb;        /* gray-200 */
+        }
+
+        [data-theme="dark"] {
+            --primary: #6366f1;       /* indigo-500 */
+            --primary-hover: #818cf8; /* indigo-400 */
+            --background: #111827;    /* gray-900 */
+            --surface: #1f2937;       /* gray-800 */
+            --text: #f9fafb;          /* gray-50 */
+            --text-muted: #9ca3af;    /* gray-400 */
+            --border: #374151;        /* gray-700 */
+        }
+
+        [data-theme="forest"] {
+            --primary: #15803d;       /* green-700 */
+            --primary-hover: #166534; /* green-800 */
+            --background: #f0fdf4;    /* green-50 */
+            --surface: #ffffff;
+            --text: #14532d;          /* green-900 */
+            --text-muted: #15803d;    /* green-700 */
+            --border: #bbf7d0;        /* green-200 */
+        }
+
+        [data-theme="ocean"] {
+            --primary: #0ea5e9;       /* sky-500 */
+            --primary-hover: #0284c7; /* sky-600 */
+            --background: #0c4a6e;    /* sky-900 */
+            --surface: #075985;       /* sky-800 */
+            --text: #f0f9ff;          /* sky-50 */
+            --text-muted: #bae6fd;    /* sky-200 */
+            --border: #0369a1;        /* sky-700 */
+        }
+
+        /* --- NUEVOS TEMAS MINIMALISTAS --- */
+
+        /* Nord (Arctic / Cool Minimalist) */
+        [data-theme="nord"] {
+            --primary: #5E81AC;       /* Frost Blue */
+            --primary-hover: #81A1C1; 
+            --background: #ECEFF4;    /* Snow Storm */
+            --surface: #FFFFFF;
+            --text: #2E3440;          /* Polar Night */
+            --text-muted: #4C566A;    
+            --border: #D8DEE9;
+        }
+
+        /* Dracula (Dark High Contrast) */
+        [data-theme="dracula"] {
+            --primary: #BD93F9;       /* Purple */
+            --primary-hover: #FF79C6; /* Pink */
+            --background: #282A36;    /* Dark Blue/Grey */
+            --surface: #44475A;
+            --text: #F8F8F2;
+            --text-muted: #6272A4;
+            --border: #6272A4;
+        }
+
+        /* Coffee (Warm Minimalist) */
+        [data-theme="coffee"] {
+            --primary: #A0522D;       /* Sienna */
+            --primary-hover: #8B4513; /* SaddleBrown */
+            --background: #FDFBF7;    /* Warm White */
+            --surface: #FFFFFF;
+            --text: #433422;          /* Dark Brown */
+            --text-muted: #8C7B70;    
+            --border: #E6E2DD;
+        }
+
+        /* Lavender (Modern Soft) */
+        [data-theme="lavender"] {
+            --primary: #8B5CF6;       /* Violet */
+            --primary-hover: #7C3AED; 
+            --background: #F5F3FF;    /* Violet-50 */
+            --surface: #FFFFFF;
+            --text: #4C1D95;          /* Violet-900 */
+            --text-muted: #8B5CF6;    
+            --border: #DDD6FE;
+        }
+        
+        /* Cyberpunk (Neon) */
+        [data-theme="cyberpunk"] {
+            --primary: #d946ef;       /* fuchsia-500 */
+            --primary-hover: #e879f9; /* fuchsia-400 */
+            --background: #0f172a;    /* slate-900 */
+            --surface: #1e293b;       /* slate-800 */
+            --text: #e2e8f0;          /* slate-200 */
+            --text-muted: #94a3b8;    /* slate-400 */
+            --border: #334155;        /* slate-700 */
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-down {
+            animation: fadeInDown 0.2s ease-out;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- Script de inicialización de tema para evitar parpadeo -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
+    <nav class="bg-primary shadow-lg transition-colors duration-300">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div>
+                        <a href="{{ url_for('index') }}" class="flex items-center py-4 px-2">
+                            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="h-10 w-10 mr-2 object-contain">
+                            <span class="font-semibold text-white text-lg">RPi Hub</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-1">
+                        <a href="{{ url_for('index') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'index' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">Mis Links</a>
+                        <a href="{{ url_for('add') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'add' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">Añadir Nuevo</a>
+                        <a href="{{ url_for('manage_categories') }}" class="py-4 px-2 text-white border-b-4 {% if request.endpoint == 'manage_categories' %}border-white font-semibold{% else %}border-transparent hover:border-white/50 opacity-80 hover:opacity-100{% endif %} transition duration-300">Gestionar Categorías</a>
+                    </div>
+
+                    <!-- Theme Dropdown (Right) -->
+                    <div class="relative group py-4">
+                        <button class="flex items-center text-white opacity-90 hover:opacity-100 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                            </svg>
+                            <span class="ml-1 text-sm font-medium hidden sm:inline">Tema</span>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-0 w-48 bg-white rounded-md shadow-xl py-2 hidden group-hover:block z-50 text-gray-800 animate-fade-in-down">
+                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">Clásicos</div>
+                            <a href="#" onclick="setTheme('light')" class="block px-4 py-2 hover:bg-indigo-100 flex items-center"><span class="w-4 h-4 rounded-full bg-gray-100 border mr-2"></span> Light</a>
+                            <a href="#" onclick="setTheme('dark')" class="block px-4 py-2 hover:bg-gray-200 flex items-center"><span class="w-4 h-4 rounded-full bg-gray-900 border mr-2"></span> Dark</a>
+                            
+                            <div class="border-t my-1"></div>
+                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">Minimalistas</div>
+                            <a href="#" onclick="setTheme('nord')" class="block px-4 py-2 hover:bg-blue-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#5E81AC] border mr-2"></span> Nord</a>
+                            <a href="#" onclick="setTheme('coffee')" class="block px-4 py-2 hover:bg-orange-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#A0522D] border mr-2"></span> Coffee</a>
+                            <a href="#" onclick="setTheme('lavender')" class="block px-4 py-2 hover:bg-purple-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#8B5CF6] border mr-2"></span> Lavender</a>
+                            
+                            <div class="border-t my-1"></div>
+                            <div class="px-4 py-2 text-xs text-gray-400 uppercase font-bold tracking-wider">Vibrantes</div>
+                            <a href="#" onclick="setTheme('dracula')" class="block px-4 py-2 hover:bg-pink-100 flex items-center"><span class="w-4 h-4 rounded-full bg-[#BD93F9] border mr-2"></span> Dracula</a>
+                            <a href="#" onclick="setTheme('cyberpunk')" class="block px-4 py-2 hover:bg-fuchsia-100 flex items-center"><span class="w-4 h-4 rounded-full bg-slate-900 border mr-2"></span> Cyberpunk</a>
+                            <a href="#" onclick="setTheme('forest')" class="block px-4 py-2 hover:bg-green-100 flex items-center"><span class="w-4 h-4 rounded-full bg-green-700 border mr-2"></span> Forest</a>
+                            <a href="#" onclick="setTheme('ocean')" class="block px-4 py-2 hover:bg-sky-100 flex items-center"><span class="w-4 h-4 rounded-full bg-sky-900 border mr-2"></span> Ocean</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto mt-8 px-4">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 shadow-sm" role="alert">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        function setTheme(themeName) {
+            localStorage.setItem('theme', themeName);
+            document.documentElement.setAttribute('data-theme', themeName);
+        }
+    </script>
+</body>
+</html>

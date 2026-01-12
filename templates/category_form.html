@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-surface p-8 rounded-xl shadow-md border border-border animate-fade-in-down">
+    <h2 class="text-2xl font-bold text-text mb-6 border-b border-border pb-2">
+        {% if category %}Editar Categoría{% else %}Nueva Categoría{% endif %}
+    </h2>
+    
+    <form method="post">
+        <div class="mb-6">
+            <label for="name" class="block text-text text-sm font-bold mb-2">Nombre de la Categoría</label>
+            <input type="text" name="name" id="name" placeholder="Ej: Redes Sociales" required 
+                   value="{{ category['name'] if category else '' }}"
+                   class="shadow appearance-none border border-border rounded w-full py-2 px-3 text-text bg-background leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <button type="submit" 
+                    class="bg-primary hover:bg-primary-hover text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 w-full sm:w-auto">
+                Guardar
+            </button>
+            <a href="{{ url_for('manage_categories') }}" class="inline-block align-baseline font-bold text-sm text-text-muted hover:text-text ml-4">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

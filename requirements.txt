@@ -1,0 +1,4 @@
+Flask
+pillow
+requests
+beautifulsoup4
