@@ -25,17 +25,14 @@ Stop editing complex YAML files or running heavy dashboards that eat up your Ras
 ### The Dashboard
 *Your hub in action. Clean, categorized, and responsive.*
 ![Main Dashboard](screenshots/dashboard-main.png)
-*(Placeholder: Capture the main index page populated with several links in different categories using the 'Nord' or 'Ocean' theme. Show the grid layout clearly.)*
 
 ### Easy Management
 *Add links, upload icons, or let us fetch them for you.*
 ![Add Link Modal](screenshots/add-link.png)
-*(Placeholder: Capture the "Add/Edit Link" form showing the 'Category' dropdown and the 'Fetch Icon from URL' option selected.)*
 
 ### Beautiful Themes
 *Cyberpunk, Nord, Coffee... choose your vibe.*
 ![Themes Showcase](screenshots/themes.png)
-*(Placeholder: Capture the dropdown menu open showing the list of available themes, or a collage of 3 different theme variations.)*
 
 ---
 
